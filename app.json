@@ -1,0 +1,12 @@
+{
+  "name": "TikTok",
+  "displayName": "TikTok",
+  "expo": {
+    "name": "TikTok",
+    "slug": "TikTok",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
