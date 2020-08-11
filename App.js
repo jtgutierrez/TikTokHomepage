@@ -4,6 +4,14 @@ import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
 import { Video } from "expo-av";
 import { ScrollView } from "react-native-gesture-handler";
 import { Asset } from "expo-asset";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import {
+  faHeart,
+  faUserCircle,
+  faComment,
+  faShareSquare,
+  faCircle,
+} from "@fortawesome/free-solid-svg-icons";
 
 const cat = Asset.fromModule(require("./videos/cat.mp4")).uri;
 const hockey = Asset.fromModule(require("./videos/hockey.mp4")).uri;
@@ -29,23 +37,64 @@ class App extends React.Component {
       <ScrollView contentContainerStyle={styles.container}>
         {videos.map((video, idx) => {
           return (
-            <TouchableWithoutFeedback
-              onPress={(j) => this.handlePress(j, idx)}
-              pagingEnabled={true}
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: "black",
+                zIndex: -1,
+                flexDirection: "column-reverse",
+              }}
             >
-              <Video
-                source={{
-                  uri: video,
+              <TouchableWithoutFeedback
+                onPress={(j) => this.handlePress(j, idx)}
+                pagingEnabled={true}
+                style={{ zIndex: 0 }}
+              >
+                <Video
+                  source={{
+                    uri: video,
+                  }}
+                  rate={1.0}
+                  volume={1.0}
+                  isMuted={false}
+                  resizeMode="cover"
+                  shouldPlay={this.state[idx]}
+                  style={{ height: "100%" }}
+                  on
+                />
+              </TouchableWithoutFeedback>
+              <View
+                style={{
+                  position: "absolute",
+                  zIndex: 2,
+                  display: "flex",
+                  alignSelf: "flex-end",
+                  justifyContent: "flex-end",
+                  height: "50%",
                 }}
-                rate={1.0}
-                volume={1.0}
-                isMuted={false}
-                resizeMode="cover"
-                shouldPlay={this.state[idx]}
-                style={{ flex: 1 }}
-                on
-              />
-            </TouchableWithoutFeedback>
+              >
+                <FontAwesomeIcon
+                  icon={faCircle}
+                  style={styles.tinyPic}
+                  size={32}
+                />
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  style={styles.tinyPic}
+                  size={32}
+                />
+                <FontAwesomeIcon
+                  icon={faComment}
+                  style={styles.tinyPic}
+                  size={32}
+                />
+                <FontAwesomeIcon
+                  icon={faShareSquare}
+                  style={styles.tinyPic}
+                  size={32}
+                />
+              </View>
+            </View>
           );
         })}
       </ScrollView>
@@ -58,7 +107,11 @@ const styles = StyleSheet.create({
   container: {
     height: `${videos.length}00%`,
     backgroundColor: "#fff",
-    // alignItems: "center",
-    // justifyContent: "center",
+  },
+  tinyPic: {
+    zIndex: 1,
+    color: "white",
+    margin: 20,
+    marginRight: 10,
   },
 });
