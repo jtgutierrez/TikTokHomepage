@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
 import { Video } from "expo-av";
 import { ScrollView } from "react-native-gesture-handler";
 import { Asset } from "expo-asset";
@@ -11,31 +11,54 @@ const shark = Asset.fromModule(require("./videos/shark.mp4")).uri;
 
 let videos = [cat, hockey, shark];
 
-export default function App() {
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {videos.map((video) => (
-        <Video
-          source={{
-            uri: video,
-          }}
-          rate={1.0}
-          volume={1.0}
-          isMuted={false}
-          resizeMode="cover"
-          shouldPlay
-          style={{ width: "100%", height: "100%" }}
-        />
-      ))}
-    </ScrollView>
-  );
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      0: false,
+      1: false,
+      2: false,
+    };
+    this.handlePress = this.handlePress.bind(this);
+  }
+  handlePress(j, idx) {
+    this.setState({ [idx]: !this.state[idx] });
+  }
+  render() {
+    return (
+      <ScrollView contentContainerStyle={styles.container}>
+        {videos.map((video, idx) => {
+          return (
+            <TouchableWithoutFeedback
+              onPress={(j) => this.handlePress(j, idx)}
+              pagingEnabled={true}
+            >
+              <Video
+                source={{
+                  uri: video,
+                }}
+                rate={1.0}
+                volume={1.0}
+                isMuted={false}
+                resizeMode="cover"
+                shouldPlay={this.state[idx]}
+                style={{ flex: 1 }}
+                on
+              />
+            </TouchableWithoutFeedback>
+          );
+        })}
+      </ScrollView>
+    );
+  }
 }
+export default App;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: `${videos.length}00%`,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    // alignItems: "center",
+    // justifyContent: "center",
   },
 });
