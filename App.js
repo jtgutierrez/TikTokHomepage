@@ -41,10 +41,12 @@ class App extends React.Component {
           playing: false,
         },
       ],
+      currentVideo: 0,
     };
     this.videoRefs = [];
     this.handlePress = this.handlePress.bind(this);
     this.handleVideoRef = this.handleVideoRef.bind(this);
+    this.handleEndDrag = this.handleEndDrag.bind(this);
   }
   async handlePress(j, idx) {
     let videoRef = this.videoRefs[idx];
@@ -59,18 +61,48 @@ class App extends React.Component {
       });
     }
   }
+
+  handleEndDrag(e) {
+    let direction;
+    let currentVideo = this.state.currentVideo;
+    let verticalVelocity = e.nativeEvent.velocity.y;
+    verticalVelocity < 0 ? (direction = "back") : (direction = "forward");
+
+    if (direction === "forward" && currentVideo !== videos.length - 1) {
+      this.setState({ currentVideo: currentVideo + 1 }, () => {
+        let idx = this.state.currentVideo;
+        let prevVideoRef = this.videoRefs[idx - 1];
+        let currentVideoRef = this.videoRefs[idx];
+        prevVideoRef.stopAsync();
+        currentVideoRef.playAsync();
+      });
+    } else if (direction === "back" && currentVideo !== 0) {
+      this.setState({ currentVideo: currentVideo - 1 }, () => {
+        let idx = this.state.currentVideo;
+        let prevVideoRef = this.videoRefs[idx + 1];
+        let currentVideoRef = this.videoRefs[idx];
+        prevVideoRef.stopAsync();
+        currentVideoRef.playAsync();
+      });
+    }
+  }
+
   handleVideoRef(playbackObj, idx) {
     this.videoRefs.push(playbackObj);
   }
+
   render() {
     return (
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        pagingEnabled={true}
+        onScrollEndDrag={this.handleEndDrag}
+      >
         {this.state.videos.map((video, idx) => {
           return (
             <View style={styles.videosContainer} key={idx}>
               <TouchableWithoutFeedback
                 onPress={(j) => this.handlePress(j, idx)}
-                pagingEnabled={true}
                 style={{ zIndex: 0 }}
               >
                 <Video
