@@ -42,11 +42,13 @@ class App extends React.Component {
         },
       ],
       currentVideo: 0,
+      height: 0,
     };
     this.videoRefs = [];
     this.handlePress = this.handlePress.bind(this);
     this.handleVideoRef = this.handleVideoRef.bind(this);
-    this.handleEndDrag = this.handleEndDrag.bind(this);
+    // this.handleEndDrag = this.handleEndDrag.bind(this);
+    this.handleEndMomentum = this.handleEndMomentum.bind(this);
   }
   async handlePress(j, idx) {
     let videoRef = this.videoRefs[idx];
@@ -56,39 +58,107 @@ class App extends React.Component {
       await videoRef.replayAsync();
     } else {
       this.setState((state) => {
-        state.videos[idx].playing = !state.videos[idx].playing;
-        return { ...state };
+        let copyState = { ...state };
+        copyState.videos[idx].playing = !copyState.videos[idx].playing;
+        return { ...copyState };
       });
     }
   }
 
-  handleEndDrag(e) {
-    let direction;
-    let currentVideo = this.state.currentVideo;
-    let verticalVelocity = e.nativeEvent.velocity.y;
-    verticalVelocity < 0 ? (direction = "back") : (direction = "forward");
+  // handleEndDrag(e) {
+  //   let direction;
+  //   let currentVideo = this.state.currentVideo;
+  //   let verticalVelocity = e.nativeEvent.velocity.y;
+  //   // console.log(e);
+  //   if (verticalVelocity === 0) return;
+  //   verticalVelocity < 0 ? (direction = "back") : (direction = "forward");
 
-    if (direction === "forward" && currentVideo !== videos.length - 1) {
-      this.setState({ currentVideo: currentVideo + 1 }, () => {
-        let idx = this.state.currentVideo;
-        let prevVideoRef = this.videoRefs[idx - 1];
-        let currentVideoRef = this.videoRefs[idx];
-        prevVideoRef.stopAsync();
-        currentVideoRef.playAsync();
-      });
-    } else if (direction === "back" && currentVideo !== 0) {
-      this.setState({ currentVideo: currentVideo - 1 }, () => {
-        let idx = this.state.currentVideo;
-        let prevVideoRef = this.videoRefs[idx + 1];
-        let currentVideoRef = this.videoRefs[idx];
-        prevVideoRef.stopAsync();
-        currentVideoRef.playAsync();
-      });
-    }
+  //   if (direction === "forward" && currentVideo !== videos.length - 1) {
+  //     this.setState(
+  //       (state) => {
+  //         let copyState = { ...state };
+  //         copyState.currentVideo++;
+  //         copyState.videos[currentVideo + 1].playing = true;
+  //         return { ...copyState };
+  //       },
+  //       () => {
+  //         let idx = this.state.currentVideo;
+  //         let prevVideoRef = this.videoRefs[idx - 1];
+  //         let currentVideoRef = this.videoRefs[idx];
+  //         prevVideoRef.stopAsync();
+  //         currentVideoRef.playAsync();
+  //       }
+  //     );
+  //   } else if (direction === "back" && currentVideo !== 0) {
+  //     this.setState(
+  //       (state) => {
+  //         let copyState = { ...state };
+  //         copyState.currentVideo--;
+  //         copyState.videos[currentVideo - 1].playing = true;
+  //         return { ...copyState };
+  //       },
+  //       () => {
+  //         let idx = this.state.currentVideo;
+  //         let prevVideoRef = this.videoRefs[idx + 1];
+  //         let currentVideoRef = this.videoRefs[idx];
+  //         prevVideoRef.stopAsync();
+  //         currentVideoRef.playAsync();
+  //       }
+  //     );
+  //   }
+  // }
+  handleEndMomentum(e) {
+    let prevHeight = this.state.height;
+    let currentHeight = e.nativeEvent.contentOffset.y;
+    let currentVideo = this.state.currentVideo;
+    console.log(e);
+
+    this.setState({ height: currentHeight }, () => {
+      if (currentHeight > prevHeight) {
+        this.setState(
+          (state) => {
+            let copyState = { ...state };
+            copyState.currentVideo++;
+            copyState.videos[currentVideo + 1].playing = true;
+            return { ...copyState };
+          },
+          () => {
+            let idx = this.state.currentVideo;
+            let prevVideoRef = this.videoRefs[idx - 1];
+            let currentVideoRef = this.videoRefs[idx];
+            prevVideoRef.stopAsync();
+            currentVideoRef.playAsync();
+          }
+        );
+      } else if (currentHeight < prevHeight) {
+        this.setState(
+          (state) => {
+            let copyState = { ...state };
+            copyState.currentVideo--;
+            copyState.videos[currentVideo - 1].playing = true;
+            return { ...copyState };
+          },
+          () => {
+            let idx = this.state.currentVideo;
+            let prevVideoRef = this.videoRefs[idx + 1];
+            let currentVideoRef = this.videoRefs[idx];
+            prevVideoRef.stopAsync();
+            currentVideoRef.playAsync();
+          }
+        );
+      }
+    });
   }
 
   handleVideoRef(playbackObj, idx) {
     this.videoRefs.push(playbackObj);
+  }
+  componentDidMount() {
+    this.setState((state) => {
+      let copyState = { ...state };
+      copyState.videos[0].playing = true;
+      return copyState;
+    });
   }
 
   render() {
@@ -96,7 +166,14 @@ class App extends React.Component {
       <ScrollView
         contentContainerStyle={styles.container}
         pagingEnabled={true}
-        onScrollEndDrag={this.handleEndDrag}
+        // onScrollEndDrag={this.handleEndDrag}
+        // onMomentumScrollBegin={(e) => console.log("BEGIN", e)}
+        onMomentumScrollEnd={this.handleEndMomentum}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        snapToAlignment={"start"}
+        disableIntervalMomentum={true}
+        canCancelContentTouches={false}
       >
         {this.state.videos.map((video, idx) => {
           return (
