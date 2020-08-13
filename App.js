@@ -1,21 +1,18 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
+import { Text, View, TouchableWithoutFeedback } from "react-native";
 import { Video } from "expo-av";
+import styles, { videos } from "./styles";
 import { ScrollView } from "react-native-gesture-handler";
-import { Asset } from "expo-asset";
+
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faHeart,
   faUserCircle,
-  faComment,
   faShareSquare,
 } from "@fortawesome/free-solid-svg-icons";
-
-const cat = Asset.fromModule(require("./videos/cat.mp4")).uri;
-const hockey = Asset.fromModule(require("./videos/hockey.mp4")).uri;
-const shark = Asset.fromModule(require("./videos/shark.mp4")).uri;
-let videos = [cat, hockey, shark];
+import comments from "./commentData";
+import CommentModal from "./components/Comments";
 
 class App extends React.Component {
   constructor() {
@@ -23,25 +20,25 @@ class App extends React.Component {
     this.state = {
       videos: [
         {
-          uri: cat,
+          uri: videos[0],
           likes: 356,
-          comments: 110,
+          comments,
           playing: false,
         },
         {
-          uri: hockey,
+          uri: videos[1],
           likes: 500,
-          comments: 53,
+          comments,
           playing: false,
         },
         {
-          uri: shark,
+          uri: videos[2],
           likes: 1000,
-          comments: 600,
+          comments,
           playing: false,
         },
       ],
-      currentVideo: 0,
+      commentsOpen: false,
     };
     this.videoRefs = [];
     this.handlePress = this.handlePress.bind(this);
@@ -84,7 +81,7 @@ class App extends React.Component {
     });
   }
 
-  handleVideoRef(playbackObj, idx) {
+  handleVideoRef(playbackObj) {
     this.videoRefs.push(playbackObj);
   }
   componentDidMount() {
@@ -103,10 +100,6 @@ class App extends React.Component {
         onMomentumScrollEnd={this.handleEndMomentum}
         showsVerticalScrollIndicator={false}
         bounces={false}
-        snapToAlignment={"start"}
-        disableIntervalMomentum={true}
-        canCancelContentTouches={false}
-        snapToStart={false}
       >
         {this.state.videos.map((video, idx) => {
           return (
@@ -116,7 +109,7 @@ class App extends React.Component {
                 style={{ zIndex: 0 }}
               >
                 <Video
-                  ref={(playbackObj) => this.handleVideoRef(playbackObj, idx)}
+                  ref={(playbackObj) => this.handleVideoRef(playbackObj)}
                   source={{
                     uri: video.uri,
                   }}
@@ -141,12 +134,9 @@ class App extends React.Component {
                   size={32}
                 />
                 <Text style={{ ...styles.tinyPicTxt }}>{video.likes}</Text>
-                <FontAwesomeIcon
-                  icon={faComment}
-                  style={{ ...styles.tinyPic, color: "#56fc03" }}
-                  size={32}
-                />
-                <Text style={{ ...styles.tinyPicTxt }}>{video.comments}</Text>
+
+                <CommentModal comments={video.comments} />
+
                 <FontAwesomeIcon
                   icon={faShareSquare}
                   style={{ ...styles.tinyPic, marginBottom: 25 }}
@@ -161,37 +151,3 @@ class App extends React.Component {
   }
 }
 export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    height: `${videos.length}00%`,
-    backgroundColor: "#fff",
-  },
-  videosContainer: {
-    flex: 1,
-    zIndex: -1,
-    flexDirection: "column-reverse",
-  },
-  picContainer: {
-    position: "absolute",
-    zIndex: 2,
-    display: "flex",
-    alignSelf: "flex-end",
-    justifyContent: "flex-end",
-    height: "50%",
-  },
-  tinyPic: {
-    zIndex: 1,
-    color: "white",
-    marginLeft: 20,
-    marginTop: 20,
-    marginRight: 10,
-  },
-  tinyPicTxt: {
-    fontSize: 9,
-    color: "white",
-    textAlign: "right",
-    fontFamily: "Futura",
-    marginRight: 5,
-  },
-});
