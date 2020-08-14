@@ -39,16 +39,31 @@ export default StyleSheet.create({
     fontFamily: "Futura",
     marginRight: 5,
   },
-  commentContainer: {
+  innerModalContainer: {
     marginTop: "60%",
+  },
+  allCommentsContainer: {},
+  singleCommentContainer: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: 10,
+    marginBottom: 10,
+    width: "100%",
+  },
+  author: {
+    fontFamily: "AvenirNext-DemiBold",
+    fontSize: 10,
+    marginBottom: 5,
   },
   modalView: {
     display: "flex",
     flexDirection: "column",
     backgroundColor: "white",
-    borderRadius: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+
     // padding: 35,
-    alignItems: "center",
+    alignItems: "flex-start",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
