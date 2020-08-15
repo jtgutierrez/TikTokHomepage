@@ -1,11 +1,5 @@
 import { StyleSheet } from "react-native";
-import { Asset } from "expo-asset";
-
-const cat = Asset.fromModule(require("./videos/cat.mp4")).uri;
-const hockey = Asset.fromModule(require("./videos/hockey.mp4")).uri;
-const shark = Asset.fromModule(require("./videos/shark.mp4")).uri;
-
-export let videos = [cat, hockey, shark];
+import { videos } from "./data";
 
 export default StyleSheet.create({
   container: {
@@ -39,10 +33,13 @@ export default StyleSheet.create({
     fontFamily: "Futura",
     marginRight: 5,
   },
+
   innerModalContainer: {
     marginTop: "60%",
   },
-  allCommentsContainer: {},
+  allCommentsContainer: {
+    width: "100%",
+  },
   singleCommentContainer: {
     display: "flex",
     flexDirection: "row",
@@ -53,7 +50,29 @@ export default StyleSheet.create({
   author: {
     fontFamily: "AvenirNext-DemiBold",
     fontSize: 10,
-    marginBottom: 5,
+  },
+  focusedInput: {
+    zIndex: 3,
+    height: "20%",
+    width: "100%",
+    padding: 10,
+  },
+  inputContainer: {
+    width: "100%",
+    borderTopColor: "black",
+    borderTopWidth: 2,
+    display: "flex",
+    flexDirection: "row",
+    padding: 10,
+  },
+  regularInput: {
+    width: "90%",
+    height: 15,
+  },
+  postButton: {
+    backgroundColor: "#95CAFF",
+    color: "white",
+    borderRadius: 200,
   },
   modalView: {
     display: "flex",
@@ -61,8 +80,6 @@ export default StyleSheet.create({
     backgroundColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-
-    // padding: 35,
     alignItems: "flex-start",
     shadowColor: "#000",
     shadowOffset: {
@@ -73,13 +90,10 @@ export default StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    // alignSelf: "flex-start",
-    // justifyContent: "flex-start",
+
     width: "100%",
-    // alignSelf: "baseline",
   },
   topRow: {
-    // justifyContent: "space-between",
     padding: 20,
     width: "100%",
   },

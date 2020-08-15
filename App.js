@@ -1,8 +1,8 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { Text, View, TouchableWithoutFeedback } from "react-native";
 import { Video } from "expo-av";
-import styles, { videos } from "./styles";
+import styles from "./styles";
+import { videos } from "./data";
 import { ScrollView } from "react-native-gesture-handler";
 
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -11,33 +11,13 @@ import {
   faUserCircle,
   faShareSquare,
 } from "@fortawesome/free-solid-svg-icons";
-import comments from "./commentData";
 import CommentModal from "./components/Comments";
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      videos: [
-        {
-          uri: videos[0],
-          likes: 356,
-          comments,
-          playing: false,
-        },
-        {
-          uri: videos[1],
-          likes: 500,
-          comments,
-          playing: false,
-        },
-        {
-          uri: videos[2],
-          likes: 1000,
-          comments,
-          playing: false,
-        },
-      ],
+      videos,
       commentsOpen: false,
     };
     this.videoRefs = [];
