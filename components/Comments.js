@@ -52,7 +52,12 @@ class Comments extends React.Component {
       },
       videoIdx
     );
-    this.setState({ comment: "" });
+    this.setState((state) => {
+      let newState = { ...state };
+      newState.comment = "";
+      newState.repliesOpen.forEach((reply) => (reply = false));
+      return newState;
+    });
     this.textInput.current.clear();
   };
 
@@ -123,7 +128,6 @@ class Comments extends React.Component {
                           <View>
                             <Text>{comment.comment}</Text>
                           </View>
-                          {/* <View style={styles.repliesContainer}> */}
                           {!this.state.repliesOpen[idx] ? (
                             <TouchableHighlight
                               activeOpacity={0}
@@ -224,7 +228,6 @@ class Comments extends React.Component {
                             </View>
                             ////////////// END REPLIES CONTAINER /////////////
                           )}
-                          {/* </View> */}
                         </View>
                         <View
                           style={{
