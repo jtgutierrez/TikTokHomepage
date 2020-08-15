@@ -123,81 +123,108 @@ class Comments extends React.Component {
                           <View>
                             <Text>{comment.comment}</Text>
                           </View>
-                          <View style={styles.repliesContainer}>
-                            {!this.state.repliesOpen[idx] ? (
-                              <TouchableHighlight
-                                activeOpacity={0}
-                                underlayColor={"white"}
-                                onPress={() => this.toggleReplies(idx)}
+                          {/* <View style={styles.repliesContainer}> */}
+                          {!this.state.repliesOpen[idx] ? (
+                            <TouchableHighlight
+                              activeOpacity={0}
+                              underlayColor={"white"}
+                              onPress={() => this.toggleReplies(idx)}
+                            >
+                              <Text style={styles.viewReplies}>
+                                View replies({comment.replies.length})
+                              </Text>
+                            </TouchableHighlight>
+                          ) : (
+                            //////////// START REPLIES CONTAINER /////////////////////
+                            <View>
+                              <ScrollView
+                                style={styles.allCommentsContainer}
+                                showsVerticalScrollIndicator={false}
                               >
-                                <Text style={styles.viewReplies}>
-                                  View replies({comment.replies.length})
-                                </Text>
-                              </TouchableHighlight>
-                            ) : (
-                              <View>
-                                <ScrollView
-                                  style={styles.allCommentsContainer}
-                                  showsVerticalScrollIndicator={false}
-                                >
-                                  {comment.replies.map((comment, idx2) => (
+                                {comment.replies.map((comment, idx2) => (
+                                  <View
+                                    style={styles.singleCommentContainer}
+                                    key={idx2}
+                                  >
+                                    <FontAwesomeIcon
+                                      icon={faUserCircle}
+                                      style={{
+                                        ...styles.tinyPic,
+                                        color: "black",
+                                        margin: 0,
+                                        textAlign: "center",
+                                      }}
+                                      size={20}
+                                    />
                                     <View
-                                      style={styles.singleCommentContainer}
-                                      key={idx2}
+                                      style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                      }}
                                     >
-                                      <FontAwesomeIcon
-                                        icon={faUserCircle}
-                                        style={{
-                                          ...styles.tinyPic,
-                                          color: "black",
-                                          margin: 0,
-                                          textAlign: "center",
-                                        }}
-                                        size={20}
-                                      />
                                       <View
                                         style={{
+                                          width: "75%",
                                           display: "flex",
                                           flexDirection: "row",
                                         }}
                                       >
                                         <View
                                           style={{
-                                            width: "100%",
                                             display: "flex",
-                                            flexDirection: "row",
+                                            flexDirection: "column",
+                                            width: "100%",
+                                            paddingTop: 5,
                                           }}
                                         >
-                                          <View
-                                            style={{
-                                              display: "flex",
-                                              flexDirection: "column",
-                                              width: "75%",
-                                              paddingTop: 5,
-                                            }}
-                                          >
-                                            <Text style={styles.author}>
-                                              {comment.author}
-                                            </Text>
-                                            <View>
-                                              <Text>{comment.comment}</Text>
-                                            </View>
+                                          <Text style={styles.author}>
+                                            {comment.author}
+                                          </Text>
+                                          <View>
+                                            <Text>{comment.comment}</Text>
                                           </View>
                                         </View>
                                       </View>
+                                      <View
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "column",
+                                        }}
+                                      >
+                                        <FontAwesomeIcon
+                                          icon={faHeart}
+                                          style={{
+                                            ...styles.tinyPic,
+                                            color: "black",
+                                            margin: 0,
+                                          }}
+                                          size={10}
+                                        />
+                                        <Text
+                                          style={{
+                                            ...styles.tinyPicTxt,
+                                            color: "black",
+                                            margin: 0,
+                                          }}
+                                        >
+                                          {comment.likes}
+                                        </Text>
+                                      </View>
                                     </View>
-                                  ))}
-                                </ScrollView>
-                                <TouchableHighlight
-                                  activeOpacity={0}
-                                  underlayColor={"white"}
-                                  onPress={() => this.toggleReplies(idx)}
-                                >
-                                  <Text style={styles.viewReplies}>Hide ^</Text>
-                                </TouchableHighlight>
-                              </View>
-                            )}
-                          </View>
+                                  </View>
+                                ))}
+                              </ScrollView>
+                              <TouchableHighlight
+                                activeOpacity={0}
+                                underlayColor={"white"}
+                                onPress={() => this.toggleReplies(idx)}
+                              >
+                                <Text style={styles.viewReplies}>Hide ^</Text>
+                              </TouchableHighlight>
+                            </View>
+                            ////////////// END REPLIES CONTAINER /////////////
+                          )}
+                          {/* </View> */}
                         </View>
                         <View
                           style={{

@@ -27,8 +27,25 @@ export let videos = [
         author: "Elaine231",
         likes: 5,
         replies: [
-          "I agree. This brought a smile to my face.",
-          "Totally a great video!",
+          {
+            comment: "My Mom loved it also.",
+            author: "TikTokker",
+            likes: 49,
+            replies: [],
+          },
+          {
+            comment: "Your mom has a great sense of humor!",
+            author: "Chewyhawk",
+            likes: 15,
+            replies: [],
+          },
+          {
+            comment:
+              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+            author: "User3",
+            likes: 9,
+            replies: [],
+          },
         ],
       },
       { comment: "Horrible video.", author: "Jim", likes: 2, replies: [] },
@@ -39,22 +56,30 @@ export let videos = [
     uri: hockey,
     likes: 500,
     comments: [
-      { comment: "Great Video!", author: "TikTokker", likes: 4, replies: [] },
       {
-        comment: "What a great video!",
-        author: "TokTikk",
-        likes: 15,
+        comment: "Soccer is way better than hockey.",
+        author: "TikTok001",
+        likes: 4,
         replies: [],
       },
-      { comment: "Amazing Video!", author: "asd23afas", likes: 9, replies: [] },
       {
-        comment:
-          "This is the best video I have ever seen! It truly is the best video. I showed my Mom and she loved it!",
-        author: "Elaine231",
-        likes: 5,
+        comment: "What a jump!",
+        author: "theTikToMyTok",
+        likes: 16,
         replies: [],
       },
-      { comment: "Horrible video.", author: "Jim", likes: 2, replies: [] },
+      {
+        comment: "I like football better.",
+        author: "asd23afas",
+        likes: 99,
+        replies: [],
+      },
+      {
+        comment: "Horrible Video!",
+        author: "Alexandra123",
+        likes: 50,
+        replies: [{ comment: "I agree", author: "Jim", likes: 2, replies: [] }],
+      },
     ],
     playing: false,
   },
@@ -64,20 +89,26 @@ export let videos = [
     comments: [
       { comment: "Great Video!", author: "TikTokker", likes: 4, replies: [] },
       {
-        comment: "What a great video!",
-        author: "TokTikk",
-        likes: 15,
-        replies: [],
+        comment: "We should go fishing there.",
+        author: "Fisherman231",
+        likes: 1,
+        replies: [
+          { comment: "I would go.", author: "Jim", likes: 1, replies: [] },
+        ],
       },
-      { comment: "Amazing Video!", author: "asd23afas", likes: 9, replies: [] },
       {
-        comment:
-          "This is the best video I have ever seen! It truly is the best video. I showed my Mom and she loved it!",
-        author: "Elaine231",
-        likes: 5,
-        replies: [],
+        comment: "I wouldnt swim in there!",
+        author: "iCantSwim",
+        likes: 23,
+        replies: [
+          {
+            comment: "Me neither! I hate sharks",
+            author: "Jim",
+            likes: 100,
+            replies: [],
+          },
+        ],
       },
-      { comment: "Horrible video.", author: "Jim", likes: 2, replies: [] },
     ],
     playing: false,
   },
@@ -85,22 +116,21 @@ export let videos = [
     uri: cop,
     likes: 5123,
     comments: [
-      { comment: "Great Video!", author: "TikTokker", likes: 4, replies: [] },
       {
-        comment: "What a great video!",
-        author: "TokTikk",
-        likes: 15,
-        replies: [],
+        comment: "Great Voice",
+        author: "CatLover",
+        likes: 12,
+        replies: [
+          { comment: "Truly.", author: "DogLover", likes: 2, replies: [] },
+        ],
       },
       { comment: "Amazing Video!", author: "asd23afas", likes: 9, replies: [] },
       {
-        comment:
-          "This is the best video I have ever seen! It truly is the best video. I showed my Mom and she loved it!",
+        comment: "My dad found this funny.",
         author: "Elaine231",
-        likes: 5,
+        likes: 1,
         replies: [],
       },
-      { comment: "Horrible video.", author: "Jim", likes: 2, replies: [] },
     ],
     playing: false,
   },
@@ -108,22 +138,47 @@ export let videos = [
     uri: kindergarten,
     likes: 1321,
     comments: [
-      { comment: "Great Video!", author: "TikTokker", likes: 4, replies: [] },
+      { comment: "HAHAHAHAHAAHAHA!", author: "Tikkki", likes: 4, replies: [] },
       {
-        comment: "What a great video!",
+        comment: "I didn't find this funny.",
         author: "TokTikk",
-        likes: 15,
+        likes: 100,
         replies: [],
       },
-      { comment: "Amazing Video!", author: "asd23afas", likes: 9, replies: [] },
+      {
+        comment: "Coronavirus is not a joke!",
+        author: "Johnny",
+        likes: 9,
+        replies: [
+          {
+            comment: "I agree. I had it 2 weeks ago.",
+            author: "Tim",
+            likes: 2,
+            replies: [],
+          },
+        ],
+      },
       {
         comment:
           "This is the best video I have ever seen! It truly is the best video. I showed my Mom and she loved it!",
         author: "Elaine231",
-        likes: 5,
+        likes: 22,
         replies: [],
       },
-      { comment: "Horrible video.", author: "Jim", likes: 2, replies: [] },
+      {
+        comment: "Horrible video.",
+        author: "Jim",
+        likes: 8,
+        replies: [
+          { comment: "I know right", author: "Tom", likes: 9, replies: [] },
+          {
+            comment: "Ik. This was totally uncalled for.",
+            author: "Jill",
+            likes: 6,
+            replies: [],
+          },
+        ],
+      },
     ],
     playing: false,
   },
