@@ -26,7 +26,10 @@ export let videos = [
           "This is the best video I have ever seen! It truly is the best video. I showed my Mom and she loved it!",
         author: "Elaine231",
         likes: 5,
-        replies: [],
+        replies: [
+          "I agree. This brought a smile to my face.",
+          "Totally a great video!",
+        ],
       },
       { comment: "Horrible video.", author: "Jim", likes: 2, replies: [] },
     ],

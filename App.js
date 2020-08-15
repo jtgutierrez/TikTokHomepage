@@ -64,6 +64,14 @@ class App extends React.Component {
   handleVideoRef(playbackObj) {
     this.videoRefs.push(playbackObj);
   }
+
+  handlePost = (comment, videoIdx) => {
+    this.setState((state) => {
+      let newState = { ...state };
+      newState.videos[videoIdx].comments.unshift(comment);
+      return newState;
+    });
+  };
   componentDidMount() {
     this.setState((state) => {
       let copyState = { ...state };
@@ -115,7 +123,11 @@ class App extends React.Component {
                 />
                 <Text style={{ ...styles.tinyPicTxt }}>{video.likes}</Text>
 
-                <CommentModal comments={video.comments} />
+                <CommentModal
+                  comments={video.comments}
+                  handlePost={this.handlePost}
+                  videoIdx={idx}
+                />
 
                 <FontAwesomeIcon
                   icon={faShareSquare}

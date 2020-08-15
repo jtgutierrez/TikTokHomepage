@@ -4,7 +4,6 @@ import {
   Text,
   TouchableWithoutFeedback,
   TextInput,
-  Button,
 } from "react-native";
 import React from "react";
 import styles from "../styles";
@@ -14,16 +13,18 @@ import {
   faHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  ScrollView,
-  TouchableOpacity,
-  TouchableHighlight,
-} from "react-native-gesture-handler";
+import { ScrollView, TouchableHighlight } from "react-native-gesture-handler";
 
 class Comments extends React.Component {
-  constructor() {
-    super();
-    this.state = { modalVisible: false, keyboardFocused: false, comment: "" };
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalVisible: false,
+      keyboardFocused: false,
+      comment: "",
+      repliesOpen: new Array(this.props.comments.length).fill(false),
+    };
+    this.textInput = React.createRef();
   }
 
   setModalVisible = (visible) => {
@@ -40,20 +41,37 @@ class Comments extends React.Component {
     console.log(e.nativeEvent.text);
     this.setState({ comment: e.nativeEvent.text });
   };
+  handlePostPress = () => {
+    const { handlePost, videoIdx } = this.props;
+    handlePost(
+      {
+        author: "Anonymous",
+        comment: this.state.comment,
+        likes: 0,
+        replies: [],
+      },
+      videoIdx
+    );
+    this.setState({ comment: "" });
+    this.textInput.current.clear();
+  };
+
+  toggleReplies = (commentIdx) => {
+    this.setState((state) => {
+      let newState = { ...state };
+      newState.repliesOpen[commentIdx] = !newState.repliesOpen[commentIdx];
+      return newState;
+    });
+  };
 
   render() {
     const { comments } = this.props;
     const { modalVisible } = this.state;
+    console.log(this.state);
+
     return (
       <View>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-          }}
-        >
+        <Modal animationType="slide" transparent={true} visible={modalVisible}>
           <View style={styles.innerModalContainer}>
             <View style={styles.modalView}>
               <View style={styles.topRow}>
@@ -97,7 +115,6 @@ class Comments extends React.Component {
                           style={{
                             display: "flex",
                             flexDirection: "column",
-                            flexWrap: "wrap",
                             width: "75%",
                             paddingTop: 5,
                           }}
@@ -105,6 +122,81 @@ class Comments extends React.Component {
                           <Text style={styles.author}>{comment.author}</Text>
                           <View>
                             <Text>{comment.comment}</Text>
+                          </View>
+                          <View style={styles.repliesContainer}>
+                            {!this.state.repliesOpen[idx] ? (
+                              <TouchableHighlight
+                                activeOpacity={0}
+                                underlayColor={"white"}
+                                onPress={() => this.toggleReplies(idx)}
+                              >
+                                <Text style={styles.viewReplies}>
+                                  View replies({comment.replies.length})
+                                </Text>
+                              </TouchableHighlight>
+                            ) : (
+                              <View>
+                                <ScrollView
+                                  style={styles.allCommentsContainer}
+                                  showsVerticalScrollIndicator={false}
+                                >
+                                  {comment.replies.map((comment, idx2) => (
+                                    <View
+                                      style={styles.singleCommentContainer}
+                                      key={idx2}
+                                    >
+                                      <FontAwesomeIcon
+                                        icon={faUserCircle}
+                                        style={{
+                                          ...styles.tinyPic,
+                                          color: "black",
+                                          margin: 0,
+                                          textAlign: "center",
+                                        }}
+                                        size={20}
+                                      />
+                                      <View
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "row",
+                                        }}
+                                      >
+                                        <View
+                                          style={{
+                                            width: "100%",
+                                            display: "flex",
+                                            flexDirection: "row",
+                                          }}
+                                        >
+                                          <View
+                                            style={{
+                                              display: "flex",
+                                              flexDirection: "column",
+                                              width: "75%",
+                                              paddingTop: 5,
+                                            }}
+                                          >
+                                            <Text style={styles.author}>
+                                              {comment.author}
+                                            </Text>
+                                            <View>
+                                              <Text>{comment.comment}</Text>
+                                            </View>
+                                          </View>
+                                        </View>
+                                      </View>
+                                    </View>
+                                  ))}
+                                </ScrollView>
+                                <TouchableHighlight
+                                  activeOpacity={0}
+                                  underlayColor={"white"}
+                                  onPress={() => this.toggleReplies(idx)}
+                                >
+                                  <Text style={styles.viewReplies}>Hide ^</Text>
+                                </TouchableHighlight>
+                              </View>
+                            )}
                           </View>
                         </View>
                         <View
@@ -150,6 +242,7 @@ class Comments extends React.Component {
                 }
               >
                 <TextInput
+                  ref={this.textInput}
                   placeholder={"Add comment..."}
                   style={
                     this.state.keyboardFocused
@@ -166,7 +259,7 @@ class Comments extends React.Component {
                   clearTextOnFocus={false}
                 ></TextInput>
                 {this.state.comment.length > 0 && !this.state.keyboardFocused && (
-                  <TouchableHighlight>
+                  <TouchableHighlight onPress={this.handlePostPress}>
                     <Text style={styles.postButton}>POST</Text>
                   </TouchableHighlight>
                 )}

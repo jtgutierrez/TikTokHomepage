@@ -110,4 +110,8 @@ export default StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
   },
+  viewReplies: {
+    color: "gray",
+    fontSize: 10,
+  },
 });
