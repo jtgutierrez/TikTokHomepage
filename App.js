@@ -1,8 +1,14 @@
 import React from "react";
-import { Text, View, TouchableWithoutFeedback } from "react-native";
+import {
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { Video } from "expo-av";
 import styles from "./styles";
-import { videos } from "./data";
+import { videos, replayButton } from "./data";
 import { ScrollView } from "react-native-gesture-handler";
 
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -21,16 +27,21 @@ class App extends React.Component {
       commentsOpen: false,
     };
     this.videoRefs = [];
-    this.handlePress = this.handlePress.bind(this);
+    this.handleVideoPress = this.handleVideoPress.bind(this);
     this.handleVideoRef = this.handleVideoRef.bind(this);
     this.handleEndMomentum = this.handleEndMomentum.bind(this);
   }
-  async handlePress(j, idx) {
+  async handleVideoPress(idx) {
     let videoRef = this.videoRefs[idx];
     let videoStatus = await videoRef.getStatusAsync();
 
     if (videoStatus.positionMillis === videoStatus.durationMillis) {
-      await videoRef.replayAsync();
+      videoRef.replayAsync();
+      this.setState((state) => {
+        let copyState = { ...state };
+        copyState.videos[idx].finished = false;
+        return { ...copyState };
+      });
     } else {
       this.setState((state) => {
         let copyState = { ...state };
@@ -54,6 +65,7 @@ class App extends React.Component {
           this.videoRefs[i].stopAsync();
         } else {
           video.playing = true;
+          video.finished = false;
         }
         return video;
       });
@@ -69,14 +81,31 @@ class App extends React.Component {
     this.setState((state) => {
       let newState = { ...state };
       newState.videos[videoIdx].comments.unshift(comment);
-      return newState;
+      return { ...newState };
     });
+  };
+
+  handlePlaybackUpdate = async (e, idx) => {
+    const { positionMillis, durationMillis, isLoaded, isPlaying } = e;
+    if (
+      positionMillis &&
+      durationMillis &&
+      positionMillis === durationMillis &&
+      isLoaded &&
+      isPlaying
+    ) {
+      this.setState((state) => {
+        let copyState = { ...state };
+        copyState.videos[idx].finished = true;
+        return { ...copyState };
+      });
+    }
   };
   componentDidMount() {
     this.setState((state) => {
       let copyState = { ...state };
       copyState.videos[0].playing = true;
-      return copyState;
+      return { ...copyState };
     });
   }
 
@@ -90,10 +119,23 @@ class App extends React.Component {
         bounces={false}
       >
         {this.state.videos.map((video, idx) => {
+          console.log(video.finished);
           return (
             <View style={styles.videosContainer} key={idx}>
+              {video.finished && (
+                <TouchableOpacity
+                  onPress={() => this.handleVideoPress(idx)}
+                  style={styles.replayButton}
+                >
+                  <Image
+                    source={replayButton}
+                    style={styles.replayButton}
+                    resizeMode="center"
+                  />
+                </TouchableOpacity>
+              )}
               <TouchableWithoutFeedback
-                onPress={(j) => this.handlePress(j, idx)}
+                onPress={() => this.handleVideoPress(idx)}
                 style={{ zIndex: 0 }}
               >
                 <Video
@@ -107,8 +149,12 @@ class App extends React.Component {
                   resizeMode="cover"
                   shouldPlay={video.playing}
                   style={{ height: "100%" }}
+                  onPlaybackStatusUpdate={(e) =>
+                    this.handlePlaybackUpdate(e, idx)
+                  }
                 />
               </TouchableWithoutFeedback>
+
               <View style={styles.picContainer}>
                 <FontAwesomeIcon
                   icon={faUserCircle}

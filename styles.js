@@ -7,6 +7,7 @@ export default StyleSheet.create({
     backgroundColor: "#fff",
   },
   videosContainer: {
+    position: "relative",
     flex: 1,
     zIndex: -1,
     flexDirection: "column-reverse",
@@ -113,5 +114,13 @@ export default StyleSheet.create({
   viewReplies: {
     color: "gray",
     fontSize: 10,
+  },
+  replayButton: {
+    position: "absolute",
+    alignSelf: "center",
+    marginBottom: "50%",
+    height: 65,
+    width: 65,
+    zIndex: 6,
   },
 });

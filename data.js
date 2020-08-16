@@ -1,5 +1,8 @@
 import { Asset } from "expo-asset";
 
+export const replayButton = Asset.fromModule(
+  require("./images/replayButton.png")
+);
 const cat = Asset.fromModule(require("./videos/cat.mp4")).uri;
 const hockey = Asset.fromModule(require("./videos/hockey.mp4")).uri;
 const shark = Asset.fromModule(require("./videos/shark.mp4")).uri;

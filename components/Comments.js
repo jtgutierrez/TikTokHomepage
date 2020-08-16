@@ -38,7 +38,6 @@ class Comments extends React.Component {
     this.setState({ keyboardFocused: false });
   };
   handleChange = (e) => {
-    console.log(e.nativeEvent.text);
     this.setState({ comment: e.nativeEvent.text });
   };
   handlePostPress = () => {
@@ -72,7 +71,6 @@ class Comments extends React.Component {
   render() {
     const { comments } = this.props;
     const { modalVisible } = this.state;
-    console.log(this.state);
 
     return (
       <View>
