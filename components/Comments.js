@@ -14,6 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { ScrollView, TouchableHighlight } from "react-native-gesture-handler";
+import Replies from "./Replies";
 
 class Comments extends React.Component {
   constructor(props) {
@@ -42,21 +43,28 @@ class Comments extends React.Component {
   };
   handlePostPress = () => {
     const { handlePost, videoIdx } = this.props;
-    handlePost(
-      {
-        author: "Anonymous",
-        comment: this.state.comment,
-        likes: 0,
-        replies: [],
+    let comment = this.state.comment;
+
+    this.setState(
+      (state) => {
+        let newState = { ...state };
+        newState.comment = "";
+        newState.repliesOpen.unshift(false);
+        newState.repliesOpen = newState.repliesOpen.map(() => false);
+        return { ...newState };
       },
-      videoIdx
+      () =>
+        handlePost(
+          {
+            author: "Anonymous",
+            comment,
+            likes: 0,
+            replies: [],
+          },
+          videoIdx
+        )
     );
-    this.setState((state) => {
-      let newState = { ...state };
-      newState.comment = "";
-      newState.repliesOpen.forEach((reply) => (reply = false));
-      return newState;
-    });
+
     this.textInput.current.clear();
   };
 
@@ -71,7 +79,7 @@ class Comments extends React.Component {
   render() {
     const { comments } = this.props;
     const { modalVisible } = this.state;
-
+    console.log(this.state.repliesOpen.length);
     return (
       <View>
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
@@ -94,8 +102,8 @@ class Comments extends React.Component {
                 style={styles.allCommentsContainer}
                 showsVerticalScrollIndicator={false}
               >
-                {comments.map((comment, idx) => (
-                  <View style={styles.singleCommentContainer} key={idx}>
+                {comments.map((comment, commentIdx) => (
+                  <View style={styles.singleCommentContainer} key={commentIdx}>
                     <FontAwesomeIcon
                       icon={faUserCircle}
                       style={{
@@ -126,105 +134,22 @@ class Comments extends React.Component {
                           <View>
                             <Text>{comment.comment}</Text>
                           </View>
-                          {!this.state.repliesOpen[idx] ? (
+                          {!this.state.repliesOpen[commentIdx] ? (
                             <TouchableHighlight
                               activeOpacity={0}
                               underlayColor={"white"}
-                              onPress={() => this.toggleReplies(idx)}
+                              onPress={() => this.toggleReplies(commentIdx)}
                             >
                               <Text style={styles.viewReplies}>
                                 View replies({comment.replies.length})
                               </Text>
                             </TouchableHighlight>
                           ) : (
-                            //////////// START REPLIES CONTAINER /////////////////////
-                            <View>
-                              <ScrollView
-                                style={styles.allCommentsContainer}
-                                showsVerticalScrollIndicator={false}
-                              >
-                                {comment.replies.map((comment, idx2) => (
-                                  <View
-                                    style={styles.singleCommentContainer}
-                                    key={idx2}
-                                  >
-                                    <FontAwesomeIcon
-                                      icon={faUserCircle}
-                                      style={{
-                                        ...styles.tinyPic,
-                                        color: "black",
-                                        margin: 0,
-                                        textAlign: "center",
-                                      }}
-                                      size={20}
-                                    />
-                                    <View
-                                      style={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                      }}
-                                    >
-                                      <View
-                                        style={{
-                                          width: "75%",
-                                          display: "flex",
-                                          flexDirection: "row",
-                                        }}
-                                      >
-                                        <View
-                                          style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            width: "100%",
-                                            paddingTop: 5,
-                                          }}
-                                        >
-                                          <Text style={styles.author}>
-                                            {comment.author}
-                                          </Text>
-                                          <View>
-                                            <Text>{comment.comment}</Text>
-                                          </View>
-                                        </View>
-                                      </View>
-                                      <View
-                                        style={{
-                                          display: "flex",
-                                          flexDirection: "column",
-                                        }}
-                                      >
-                                        <FontAwesomeIcon
-                                          icon={faHeart}
-                                          style={{
-                                            ...styles.tinyPic,
-                                            color: "black",
-                                            margin: 0,
-                                          }}
-                                          size={10}
-                                        />
-                                        <Text
-                                          style={{
-                                            ...styles.tinyPicTxt,
-                                            color: "black",
-                                            margin: 0,
-                                          }}
-                                        >
-                                          {comment.likes}
-                                        </Text>
-                                      </View>
-                                    </View>
-                                  </View>
-                                ))}
-                              </ScrollView>
-                              <TouchableHighlight
-                                activeOpacity={0}
-                                underlayColor={"white"}
-                                onPress={() => this.toggleReplies(idx)}
-                              >
-                                <Text style={styles.viewReplies}>Hide ^</Text>
-                              </TouchableHighlight>
-                            </View>
-                            ////////////// END REPLIES CONTAINER /////////////
+                            <Replies
+                              comment={comment}
+                              toggleReplies={this.toggleReplies}
+                              commentIdx={commentIdx}
+                            />
                           )}
                         </View>
                         <View

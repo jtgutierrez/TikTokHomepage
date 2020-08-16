@@ -27,11 +27,9 @@ class App extends React.Component {
       commentsOpen: false,
     };
     this.videoRefs = [];
-    this.handleVideoPress = this.handleVideoPress.bind(this);
-    this.handleVideoRef = this.handleVideoRef.bind(this);
-    this.handleEndMomentum = this.handleEndMomentum.bind(this);
   }
-  async handleVideoPress(idx) {
+
+  handleVideoPress = async (idx) => {
     let videoRef = this.videoRefs[idx];
     let videoStatus = await videoRef.getStatusAsync();
 
@@ -49,9 +47,9 @@ class App extends React.Component {
         return { ...copyState };
       });
     }
-  }
+  };
 
-  handleEndMomentum(e) {
+  handleEndMomentum = (e) => {
     let idx =
       (e.nativeEvent.contentOffset.y + e.nativeEvent.layoutMeasurement.height) /
         e.nativeEvent.layoutMeasurement.height -
@@ -71,11 +69,11 @@ class App extends React.Component {
       });
       return { ...copyState };
     });
-  }
+  };
 
-  handleVideoRef(playbackObj) {
+  handleVideoRef = (playbackObj) => {
     this.videoRefs.push(playbackObj);
-  }
+  };
 
   handlePost = (comment, videoIdx) => {
     this.setState((state) => {
