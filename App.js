@@ -119,7 +119,6 @@ class App extends React.Component {
         bounces={false}
       >
         {this.state.videos.map((video, idx) => {
-          console.log(video.finished);
           return (
             <View style={styles.videosContainer} key={idx}>
               {video.finished && (
