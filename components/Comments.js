@@ -26,6 +26,7 @@ class Comments extends React.Component {
       repliesOpen: new Array(this.props.comments.length).fill(false),
     };
     this.textInput = React.createRef();
+    this.scrollView = React.createRef();
   }
 
   setModalVisible = (visible) => {
@@ -65,6 +66,7 @@ class Comments extends React.Component {
         )
     );
 
+    this.scrollView.current.scrollTo({ x: 0, y: 0 });
     this.textInput.current.clear();
   };
 
@@ -79,7 +81,6 @@ class Comments extends React.Component {
   render() {
     const { comments } = this.props;
     const { modalVisible } = this.state;
-    console.log(this.state.repliesOpen.length);
     return (
       <View>
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
@@ -99,6 +100,7 @@ class Comments extends React.Component {
                 </TouchableWithoutFeedback>
               </View>
               <ScrollView
+                ref={this.scrollView}
                 style={styles.allCommentsContainer}
                 showsVerticalScrollIndicator={false}
               >
